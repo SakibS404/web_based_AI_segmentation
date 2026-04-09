@@ -1,0 +1,158 @@
+
+ {% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'design.css' %}">
+    
+
+  </head>
+
+
+
+
+  <body>
+    <div class="container">
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <div class="row justify-content-center">
+
+        <!-- TITLE-->
+        <div class="col-md-6 text-black text-center mt-5">
+            <div class="Title-box">BRAIN TUMOR SEGMENTATION AND EDUCATION MODEL</div>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="row">
+        
+        <!-- UPLOADED MRI SCAN DISPLAY-->
+        <div class="col-6 mt-4">
+            <div class="Display-box">MRI</div>
+        </div>
+
+
+        <!-- UPLOADED MASK OUTPUT DISPLAY-->
+        <div class="col-6 mt-4">
+            <div class="Display-box">SEGMENTATION MASK</div>
+        </div>
+
+    </div>
+
+
+    <!-- FILE TYPE-->
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6 text-center">
+            <div class="File-type-box"> DISCLAIMER: This application is for educational use only and not for medical use. Results may be inaccurate. </div>
+        </div>
+    </div>
+
+
+
+
+
+        <!-- FileCheck BUTTON-->
+
+        <div class="row justify-content-center mt-4">
+          <div class="col-md-4 text-center">
+
+              <button class="Check-button"
+                data-bs-toggle="modal"
+                data-bs-target="#fileModal">
+            Check file requirements
+        </button>
+
+
+    </div>
+</div>
+
+
+
+
+    <!-- UPLOAD BUTTON-->
+     <div class="row justify-content-center mt-4">
+        <div class="col-md-4 text-center">
+            
+            <button class="Upload-button">
+             Upload MRI
+            </button>
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- LLM OUTPUT DISPLAY-->
+     <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <div class="Explanation-box">EXPLANATION</div>
+        
+    </div>
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+    <div class="modal fade" id="fileModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content Modal-box">
+
+      <div class="modal-header">
+        <h5 class="modal-title">File Requirements</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="Modal-box">
+        • Only .nii / .nii.gz files<br>
+        • MRI scans only<br>
+        • BraTS-style data recommended<br>
+        • Max size: 50MB
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+  
+
+    
+
+
+
+
+
+
+
+
+  </body>
+</html>
