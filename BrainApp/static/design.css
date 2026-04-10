@@ -8,6 +8,8 @@ background-color: #FAF9F5;
 
     background-size: 100% 28px;
 
+
+
     
 
 }
@@ -75,7 +77,7 @@ background-color: #FAF9F5;
 
 
 
-.File-type-box{
+.Disclaimer-box{
 
     background-color: #fec89a;   
 
@@ -87,6 +89,7 @@ background-color: #FAF9F5;
     font-family:Helvetica;
     font-weight: 500;
     font-size: 15px;
+    font-weight: bold;
     color: #141413;
 
     display: inline-block;   
@@ -142,7 +145,7 @@ background-color: #FAF9F5;
 
 .Check-button{
 
-    background-color: #a2d2ff; 
+    background-color: #fec89a;  
     
     margin-top: 10px;
     
@@ -151,6 +154,7 @@ background-color: #FAF9F5;
 
     font-family:Helvetica;
     font-size: 15px;
+    font-weight: bold;
     color: #141413;
 
     text-align: center;
@@ -170,7 +174,7 @@ background-color: #FAF9F5;
 
 }
 .Check-button:hover {
-    background-color: #5aa9e6;
+    background-color: #fcb06c;
 }
 
 
@@ -223,10 +227,6 @@ background-color: #FAF9F5;
     font-family:Helvetica;
     font-size: 16px;
     color: #141413;
-
-
-
-    
 
     
 }
