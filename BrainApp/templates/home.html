@@ -18,9 +18,34 @@
 
 
   <body>
+
+    
+
+
+
+
+      <!-- form for file upload-->
+
+      <form id="uploadForm" method="post" action="{% url 'uploaded_file' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <input type="file" id="fileInput" name="file" style="display: none;" 
+        onchange="document.getElementById('uploadForm').submit();">
+
+      </form>
+
+
+
+
+
+
+
+      
+      <!-- TITLE-->
+
     <div class="container">
       <div class="row justify-content-center">
-        <!-- TITLE-->
+  
         <div class="col-md-6 text-black text-center mt-5">
           <div class="Title-box">BRAIN TUMOR SEGMENTATION AND EDUCATION MODEL</div>
         </div>
@@ -30,27 +55,72 @@
 
 
 
+        <!-- UPLOADED MRI SCAN DISPLAY-->
+
     <div class="row">
         
-        <!-- UPLOADED MRI SCAN DISPLAY-->
         <div class="col-6 mt-4">
-          <div class="Display-box">MRI</div>
+          <div class="Display-box">
+
+
+              <!-- show error message-->
+
+            {% if error %}
+
+            <p> {{ error }} </p>
+
+            
+
+            
+            <!-- or show uploaded image -->
+            {% elif image_url %}
+
+            <img src = "{{ image_url }}" style = "max-width:100%; max-height:100%">
+
+
+
+            <!-- if neither then show the information -->
+            {% else %}
+
+            <p> MRI scan will be displayed here after upload </p>
+
+            {% endif%}
+
+
+          </div>
         </div>
+
+
+
 
 
         <!-- UPLOADED MASK OUTPUT DISPLAY-->
         <div class="col-6 mt-4">
+
             <div class="Display-box">SEGMENTATION MASK</div>
+
         </div>
       </div>
 
+
+
+
+
       <!-- Disclaimer-->
       <div class="row justify-content-center mt-4">
+
+
         <div class="col-md-6 text-center">
+
           <div class="Disclaimer-box">
+
             <p>DISCLAIMER: This application is for educational use only and not for medical use. Results may not always be accurate.</p>
+
           </div>
+
+
         </div>
+
       </div>
 
 
@@ -58,7 +128,9 @@
 
       <!-- FileCheck BUTTON-->
       <div class="row justify-content-center mt-4">
+
         <div class="col-md-4 text-center">
+
           <button class="Check-button" data-bs-toggle="modal" data-bs-target="#fileModal" aria-label="Check file requirements">
             Check file requirements
         </button>
@@ -72,9 +144,10 @@
 
     <!-- UPLOAD BUTTON-->
      <div class="row justify-content-center mt-4">
+
         <div class="col-md-4 text-center">
             
-            <button class="Upload-button">
+            <button class="Upload-button" onclick="document.getElementById('fileInput').click();">
              Upload MRI
             </button>
 
@@ -87,60 +160,96 @@
     <!-- LLM OUTPUT DISPLAY-->
      <div class="row justify-content-center mt-4">
         <div class="col-md-6">
+
             <div class="Explanation-box">EXPLANATION</div>
         
     </div>
 
-
-
-
-
-
-
-
-
-
     </div>
 
 
 
 
 
+       <!-- IMPLEMNTING MODAL TO DISPLAY FILE REQUIREMENTS-->
+
     <div class="modal fade" id="fileModal" tabindex="-1">
+
       <div class="modal-dialog modal-dialog-centered modal-lg">
+
+
         <div class="modal-content Modal-box">
+
           <div class="modal-header">
+
             <h4 class="modal-title fw-bold ">File Requirements</h4>
+
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
           </div>
+
+
+
+
+          <!-- File requirements text-->
+
           <div class="modal-body">  
 
-            <p > This system is designed for use with the BraTS2020 dataset. To ensure compatibility, please use the provided dataset linked below. </p>
-
-          
-            <p> Only upload MRI image files (do not include segmentation mask files).</p>
+            <p style="font-weight: bold;" > This system is designed for use with a preprocessed version of the BraTS2020 dataset. To ensure compatibility, please use the provided dataset linked below. </p>
 
 
-          
 
 
-            <p class="mt-3">If you choose to use your own data, please ensure it meets the following requirements:</p>
+
+            <p>If you choose to use your own data (not recommended), please ensure it meets the following requirements:</p>
 
           <ul>
 
-              <li> File format: .nii or .nii.gz (NIfTI)</li>
-              <li> Modalities: T1, T1Gd, T2, T2-FLAIR</li>
+              <li> File format: .h5 (HDF5)</li>
+              <li> MRI Modalities: T1, T1Gd, T2, T2-FLAIR (4 channels)</li>
               <li> Image dimensions: 240 × 240 × 4</li>
               <li> Data type: float64</li>
             </ul>
 
 
-             <p> Recommended dataset:
+
+
+            
+            <p>
+
+              Note: BraTS datasets are provided in .nii.gz (NIfTI) format and requires 
+                conversion to .h5 format and preprocessing to be compatible 
+                with this system. If you choose to use your own data, you will need to 
+                perform these steps before uploading.
+            </p>
+
+          
+
+
+
+            <p style="font-weight: bold;" >To access the dataset, follow these steps:</p>
+
+             <ol>
+              <li>Access the dataset using the link provided below</li>
+              <li>Open the Data Explorer interface</li>
+              <li>Navigate to the slice level data directory</li>
+              <li>Download individual .h5 slice files</li>
+              </ol>
+
+
+
+
+             <p style="font-weight: bold;" >Recommended dataset:
               <a href="https://www.kaggle.com/datasets/awsaf49/brats2020-training-data" target="_blank" rel="noopener noreferrer">BraTS2020 Training Data (Kaggle)</a>
              </p>
 
+
+
           </div>
+
         </div>
+
+
       </div>
     </div>
 
