@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from .h5_loading import load_h5_file
 
 
 
@@ -37,11 +38,15 @@ def file_upload(request):
 
 
             
-        fs = FileSystemStorage()
-        filename = fs.save(file.name, file)
-        image_url = fs.url(filename)
+        file_name, error = load_h5_file(file, 'media')
 
-        return render(request, 'home.html', {'image_url': image_url})
+        if error:
+            return render(request, 'home.html', {'error': error})
+        
+
+        return render(request, 'home.html', {
+            'image_url': f'/media/{file_name}'   })
+            
 
            
                

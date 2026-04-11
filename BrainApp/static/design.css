@@ -39,7 +39,7 @@ background-color: #FAF9F5;
 
     margin: 0 auto;
 
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px #0000001A;
 
 
 }
@@ -47,13 +47,13 @@ background-color: #FAF9F5;
 
 
 
-.Display-box{
-    height: 350px;                     
+.MRI-box{
+    height: 456px;
+    width: 520px ;   
+    
+    margin-top: 20px ;
            
     background-color: #FAF9F5;
-
-    margin-top: 20px;
-
 
     border: 2px solid #a2d2ff;         
     border-radius: 10px;
@@ -66,12 +66,15 @@ background-color: #FAF9F5;
 
     overflow: hidden;   
 
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    
+    box-shadow: 0 2px 6px #0000001A;
     
 
-    
 }
+
+
+
+
+
 
 
 
@@ -98,7 +101,7 @@ background-color: #FAF9F5;
     border-radius: 10px;
 
     
-    box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 2px 2px 6px #0000001A;
 
 }
 
@@ -127,7 +130,7 @@ background-color: #FAF9F5;
 
     border-radius: 10px;
 
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px #00000033;
 
     
 
@@ -166,7 +169,7 @@ background-color: #FAF9F5;
 
     border-radius: 10px;
 
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px #00000033;
 
     border: none;
 
@@ -202,7 +205,7 @@ background-color: #FAF9F5;
 
     overflow: hidden;   
 
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px #0000001A;
 
 
 }
@@ -227,6 +230,8 @@ background-color: #FAF9F5;
     font-family:Helvetica;
     font-size: 16px;
     color: #141413;
+
+     
 
     
 }

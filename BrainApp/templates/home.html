@@ -57,10 +57,10 @@
 
         <!-- UPLOADED MRI SCAN DISPLAY-->
 
-    <div class="row">
-        
-        <div class="col-6 mt-4">
-          <div class="Display-box">
+    
+        <div style="display:flex; justify-content:center; gap:100px; margin-top:20px;">
+       
+          <div class="MRI-box">
 
 
               <!-- show error message-->
@@ -69,13 +69,12 @@
 
             <p> {{ error }} </p>
 
-            
-
+          
             
             <!-- or show uploaded image -->
             {% elif image_url %}
 
-            <img src = "{{ image_url }}" style = "max-width:100%; max-height:100%">
+            <img src = "{{ image_url }}" style = "width:520px; height:456px;">
 
 
 
@@ -88,20 +87,20 @@
 
 
           </div>
-        </div>
-
-
+        
 
 
 
         <!-- UPLOADED MASK OUTPUT DISPLAY-->
-        <div class="col-6 mt-4">
+        
 
-            <div class="Display-box">SEGMENTATION MASK</div>
+            <div class="MRI-box">SEGMENTATION MASK</div>
 
-        </div>
+        
+      
+
+
       </div>
-
 
 
 
