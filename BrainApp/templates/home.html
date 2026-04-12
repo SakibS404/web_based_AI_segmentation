@@ -29,7 +29,7 @@
       <form id="uploadForm" method="post" action="{% url 'uploaded_file' %}" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <input type="file" id="fileInput" name="file" style="display: none;" 
+        <input type="file" id="fileInput" name="file"  accept=".h5" style="display: none;" 
         onchange="document.getElementById('uploadForm').submit();">
 
       </form>
@@ -160,7 +160,20 @@
      <div class="row justify-content-center mt-4">
         <div class="col-md-6">
 
-            <div class="Explanation-box">EXPLANATION</div>
+            <div class="Explanation-box">
+
+            {% if llm_output %}
+
+           
+            <p>{{llm_output}}</p>
+
+            {% else %}
+
+            <p>Upload a MRI file and I'll analyse it for you</p>
+
+              {% endif%}
+
+            </div>
         
     </div>
 
@@ -200,6 +213,8 @@
 
 
 
+
+
             <p>If you choose to use your own data (not recommended), please ensure it meets the following requirements:</p>
 
           <ul>
@@ -230,10 +245,13 @@
 
              <ol>
               <li>Access the dataset using the link provided below</li>
-              <li>Open the Data Explorer interface</li>
-              <li>Navigate to the slice level data directory</li>
-              <li>Download individual .h5 slice files</li>
+              <li>Download and extract the dataset</li>
+              <li>Navigate to the slice level directory</li>
+              <li>Select and upload an individual slice file for analysis</li>
               </ol>
+
+            <p>Not all slices in the dataset contain tumors and some may be empty. 
+              You may need to use the meta-data file (located in the download folder) to identify slices with visible tumors for testing.</p>
 
 
 

@@ -15,6 +15,7 @@ def load_h5_file(file, media_root):
             if 'image' not in f:
                 return None,"Missing MRI image data"
             
+            #only  loading the image  not the mask  !
             mri_image = f['image'][:]
 
 
@@ -31,12 +32,6 @@ def load_h5_file(file, media_root):
         mri_image = (mri_image - mri_image.min()) / (mri_image.max() - mri_image.min()) 
         mri_image = (mri_image * 255).astype(np.uint8)
        
-
-
-    #normalize the channel 
-    
-      
-
 
 
 

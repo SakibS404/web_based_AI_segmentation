@@ -13,3 +13,8 @@ db.sqlite3
 
 # VS Code settings (optional)
 .vscode/
+
+#media ignore
+media/
+*.h5
+*.png
