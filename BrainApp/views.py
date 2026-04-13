@@ -6,6 +6,11 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from .h5_loading import load_h5_file
 from .LLM_API import llm_response
+from .U_NET import run_Unet
+import numpy as np
+
+from PIL import Image
+import os
 
 
 
@@ -71,7 +76,7 @@ def file_upload(request):
         #file check
 
             
-        file_name, error = load_h5_file(file, 'media')
+        file_name, mri_image_4C, mri_display, error = load_h5_file(file, 'media')
 
         if error:
             return render(request, 'home.html', {'error': error})
@@ -80,11 +85,60 @@ def file_upload(request):
 
 
 
+        #run unet and get the mask
+
+        mask = run_Unet(mri_image_4C)
+
+
+        
+        #convert mask to rgbp
+
+        mri_color = np.stack([mri_display]  * 3, axis=-1)
+
+        #adding thhe colors to the mask
+
+        color_mask = np.zeros_like(mri_color)
+
+        color_mask[mask == 1] = [255, 0, 0]  #red
+
+        color_mask[mask == 2] = [0, 255, 0] # green
+
+        color_mask[mask == 3] = [0, 0, 255] # blue
+
+
+        
+
+        #overlay
+        alpha = 0.35
+
+        overlay = ((1- alpha) * mri_color + alpha * color_mask).astype(np.uint8)
+        
+        
+
+
+
+
+        overlay_mask = Image.fromarray(overlay)
+        
+
+        overlay_path = os.path.join('media', 'overlay.png')
+
+
+        #save overlay as image
+
+        overlay_mask.save(overlay_path)
+
+    
+
+
+
+
+
         #LLM RESPONSE 
 
-        image_path = f"media/{file_name}"
+        overlay_path = f"media/overlay.png"
 
-        llm_output = llm_response(image_path)
+        llm_output = llm_response(overlay_path)
 
         if not llm_output:
             llm_output = "Sorry service is currently unavailable"
@@ -96,6 +150,7 @@ def file_upload(request):
 
         return render(request, 'home.html', {
             'image_url': f'/media/{file_name}' ,
+            'overlay_url': '/media/overlay.png',
               'llm_output': llm_output  })
             
 

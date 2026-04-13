@@ -94,7 +94,11 @@
         <!-- UPLOADED MASK OUTPUT DISPLAY-->
         
 
-            <div class="MRI-box">SEGMENTATION MASK</div>
+            <div class="MRI-box">
+
+                 <img src="{{ overlay_url }}" style="width:520px; height:456px;">
+
+            </div>
 
         
       
@@ -165,7 +169,7 @@
             {% if llm_output %}
 
            
-            <p>{{llm_output}}</p>
+            <div class="llm-text">{{llm_output}}</div>
 
             {% else %}
 

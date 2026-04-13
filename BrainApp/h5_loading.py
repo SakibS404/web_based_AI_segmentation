@@ -15,13 +15,16 @@ def load_h5_file(file, media_root):
             if 'image' not in f:
                 return None,"Missing MRI image data"
             
-            #only  loading the image  not the mask  !
+            #only  loading the image  not the mask  
             mri_image = f['image'][:]
+
+            #saving a copy of the 4 modality image
+            mri_image_4C = mri_image.copy()
 
 
     #checking image shape
         if mri_image.shape != (240, 240,4):
-            return None, "Image shape is invalid please check the file requirements"
+            return None, None, "Image shape is invalid please check the file requirements"
     
 
     # take one of the channels to display
@@ -42,9 +45,9 @@ def load_h5_file(file, media_root):
         output_path = os.path.join(media_root, 'uploaded_image.png')
         img.save(output_path)
 
-        return "uploaded_image.png", None
+        return "uploaded_image.png", mri_image_4C,mri_image, None
 
     except Exception as e:
 
-        return None, str(e)
+        return None, None, None, str(e)
             
