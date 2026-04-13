@@ -42,10 +42,42 @@ def llm_response(image_path):
         "content": [
             {"type": "input_text",
              
-              "text":("This is a brain MRI with tumor segmentation overlay (red = necrotic core, green = edema, blue = enhancing tumor)."
-              "First, describe the MRI findings in clear academic terms. Then explain what the colored tumor regions represent. Finally,"
-              "discuss what these findings may indicate clinically. Use a professional tone but ensure the explanation is understandable to a general audience. "
-                )},
+              "text": """This is a output of abrain MRI with a segmentation overlay.
+
+                Colors (if present):
+                - red = necrotic core
+                - green = edema (swelling)
+                - blue = active tumor
+
+                IMPORTANT:
+                Carefully check if any red, green, or blue colored regions are actually visible.
+
+                If NO colored regions are present:
+                - Say clearly: "No tumor regions are visible in this scan."
+                - Do not describe tumor types.
+
+                If colored regions ARE present:
+                Explain the scan in simple terms.
+
+                Structure:
+                1. What is visible
+                2. What each colored region means (only if present)
+                3. What this means for the patient
+
+                Rules:
+                - Do not assume tumors exist
+                - Only describe colors that are clearly visible
+                - If unsure, say no tumor is visible
+                - Keep it concise and clear for a non-medical audience
+                - Use medically accurate information consistent with trusted sources like PubMed and the WHO classification.
+                - Always remind the user to consult a doctor for medical advice
+                - Always remind the user that this is an AI interpretation and not a medical diagnosis
+                - Always remind the user that the output can be incorrect
+                - provide these links for further reading:https://www.cancer.gov/types/brain    and  https://www.nhs.uk/conditions/brain-tumours/   and https://www.who.int/news-room/fact-sheets/detail/cancer
+                -Format all links as clickable HTML links using <a href="URL" target="_blank">text</a>.
+                -Do NOT outpt plain URLs.
+                """
+                },
             {
                 "type": "input_image",
 

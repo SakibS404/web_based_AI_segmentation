@@ -81,7 +81,7 @@
             <!-- if neither then show the information -->
             {% else %}
 
-            <p> MRI scan will be displayed here after upload </p>
+            <p> MRI upload will be displayed here please wait... </p>
 
             {% endif%}
 
@@ -91,12 +91,30 @@
 
 
 
+
+
         <!-- UPLOADED MASK OUTPUT DISPLAY-->
         
 
             <div class="MRI-box">
 
+              {% if unet_error %}
+
+                <p>{{ unet_error }}</p>
+
+
+              {% elif overlay_url %}
+
                  <img src="{{ overlay_url }}" style="width:520px; height:456px;">
+
+
+              {% else %}
+
+              <p> Tumor detection will be displayed here...  </p>
+
+
+              {% endif %}
+
 
             </div>
 
@@ -158,30 +176,56 @@
         </div>
       </div>
 
+
+
+
       
 
     <!-- LLM OUTPUT DISPLAY-->
-     <div class="row justify-content-center mt-4">
-        <div class="col-md-6">
+     <div class="row justify-content-center mt-4 MB-5">
+        <div class="col-md-10">
 
-            <div class="Explanation-box">
+            <div class="Explanation-box" >
 
-            {% if llm_output %}
+
+        <P style="font-weight:bold; font-size:20px;"> AI EXPLANATION:</P>
+
+
+            <!-- show error message-->
+
+            {% if llm_error %}
+
+            <p>{{ llm_error }}</p>
+
+
+            {% elif llm_output %}
 
            
-            <div class="llm-text">{{llm_output}}</div>
+            <div class="llm-text">{{llm_output | safe}}</div>
 
             {% else %}
 
-            <p>Upload a MRI file and I'll analyse it for you</p>
+            <p>Processing MRI please wait...</p>
 
-              {% endif%}
+              {% endif %}
 
             </div>
         
     </div>
 
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -273,8 +317,6 @@
 
       </div>
     </div>
-
-
 
 
 

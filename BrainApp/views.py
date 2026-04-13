@@ -1,4 +1,4 @@
-from xmlrpc import client
+
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -56,7 +56,6 @@ def file_upload(request):
 
         
         
-        
 
         
         #limit file size to 1MB 
@@ -72,7 +71,6 @@ def file_upload(request):
 
 
 
-
         #file check
 
             
@@ -83,75 +81,107 @@ def file_upload(request):
         
 
 
+        #edge case to 
+        llm_output = None
+        overlay_path = None
+        Unet_success = False
 
 
-        #run unet and get the mask
-
-        mask = run_Unet(mri_image_4C)
-
-
-        
-        #convert mask to rgbp
-
-        mri_color = np.stack([mri_display]  * 3, axis=-1)
-
-        #adding thhe colors to the mask
-
-        color_mask = np.zeros_like(mri_color)
-
-        color_mask[mask == 1] = [255, 0, 0]  #red
-
-        color_mask[mask == 2] = [0, 255, 0] # green
-
-        color_mask[mask == 3] = [0, 0, 255] # blue
-
-
-        
-
-        #overlay
-        alpha = 0.35
-
-        overlay = ((1- alpha) * mri_color + alpha * color_mask).astype(np.uint8)
-        
+        #settiing error to default none
+        unet_error = None
+        llm_error = None
         
 
 
 
-
-        overlay_mask = Image.fromarray(overlay)
-        
-
-        overlay_path = os.path.join('media', 'overlay.png')
+        try:
 
 
-        #save overlay as image
+            #run unet and get the mask
 
-        overlay_mask.save(overlay_path)
-
-    
-
-
-
-
-
-        #LLM RESPONSE 
-
-        overlay_path = f"media/overlay.png"
-
-        llm_output = llm_response(overlay_path)
-
-        if not llm_output:
-            llm_output = "Sorry service is currently unavailable"
-
+            mask = run_Unet(mri_image_4C)
 
 
         
+            #convert mask to rgbp
+
+            mri_color = np.stack([mri_display]  * 3, axis=-1)
+
+
+
+            #adding thhe colors to the mask
+
+            color_mask = np.zeros_like(mri_color)
+
+            color_mask[mask == 1] = [255, 0, 0]  #red
+
+            color_mask[mask == 2] = [0, 255, 0] # green
+
+            color_mask[mask == 3] = [0, 0, 255] # blue
+
+
+
+            #overlay
+            alpha = 0.35
+
+            overlay = ((1- alpha) * mri_color + alpha * color_mask).astype(np.uint8)
         
+        
+            overlay_mask = Image.fromarray(overlay)
+        
+
+            overlay_path = os.path.join('media', 'overlay.png')
+
+
+            #save overlay as image
+
+            overlay_mask.save(overlay_path)
+        
+
+
+            #error handling for unet
+            Unet_success = True
+
+        except Exception as e:
+            Unet_success = False
+            overlay_path = None
+            unet_error = "Sorry but the System was not able to perform tumor detection"
+            llm_output = None
+
+
+
+
+
+
+
+        if Unet_success:
+
+             try:
+        
+                 #LLM RESPONSE 
+
+                llm_output = llm_response(overlay_path)
+
+
+
+                if not llm_output:
+                     llm_output = "Sorry service is currently unavailable"
+
+
+             except Exception :
+                llm_error = "Sorry but there was an error with the LLM response: "
+        
+      
+
 
         return render(request, 'home.html', {
             'image_url': f'/media/{file_name}' ,
-            'overlay_url': '/media/overlay.png',
-              'llm_output': llm_output  })
+            'overlay_url': f'/{overlay_path}' if overlay_path else None,
+              'llm_output': llm_output,
+            'unet_error': unet_error,
+            'llm_error': llm_error
+
+     })
             
 
            
