@@ -6,31 +6,21 @@ import base64
 
 
 
-
 client = OpenAI()
 
 
-
 def llm_response(image_path):
-
 
 
     #since keys in the venv it wont run outside it
     if not os.getenv("OPENAI_API_KEY"):
         return "Sakib: Sorry but the API key is on my local pc virtual environment so it wont work here"
 
-
     try:
-
-        #convert image to base64 to give to llm
-
-        
-
+        #convert image to json to give to llm
         with open(image_path,"rb")as f:
 
             image_base64 = base64.b64encode(f.read()).decode("utf-8")
-
-
 
 
 

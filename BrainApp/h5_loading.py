@@ -13,19 +13,21 @@ def load_h5_file(file, media_root):
         #loading and reading the h5 file
         with h5py.File(file, 'r') as f:
             if 'image' not in f:
-                return None,"Missing MRI image data"
+                return None, None,"Missing MRI image data"
             
             #only  loading the image  not the mask  
             mri_image = f['image'][:]
 
-            #saving a copy of the 4 modality image
+
+
+            #checking image shape
+            if mri_image.shape != (240, 240,4):
+                return None, None, "Image shape is invalid please check the file requirements"
+
+            #saving a copy of the 4 modality image for using as input for U-Net AND OVERLAY
             mri_image_4C = mri_image.copy()
 
 
-    #checking image shape
-        if mri_image.shape != (240, 240,4):
-            return None, None, "Image shape is invalid please check the file requirements"
-    
 
     # take one of the channels to display
         mri_image = mri_image[:,:,0]
@@ -36,10 +38,10 @@ def load_h5_file(file, media_root):
         mri_image = (mri_image * 255).astype(np.uint8)
        
 
-
-
     #converting single channel into image
         img = Image.fromarray(mri_image)
+
+
 
     #saving the image to media folder
         output_path = os.path.join(media_root, 'uploaded_image.png')
@@ -50,4 +52,5 @@ def load_h5_file(file, media_root):
     except Exception as e:
 
         return None, None, None, str(e)
+            
             

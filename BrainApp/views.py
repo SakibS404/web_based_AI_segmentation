@@ -14,7 +14,7 @@ import os
 
 
 
-# Create your views here.
+# views
 def home(request):
     return render(request,"home.html")
 
@@ -25,14 +25,11 @@ def file_upload(request):
         file = request.FILES.get('file')
 
 
-
-
         # Check if a file was uploaded
         if not file:
              
              return render(request, 'home.html')
         
-
 
         # check if file is h5
         if not file.name.endswith('.h5'):
@@ -42,19 +39,12 @@ def file_upload(request):
                 })
 
 
-
-
-        
-
         #check if the file is empty or not
         if file.size == 0:
 
             return render(request, 'home.html', {
                 'error': 'The uploaded file is empty.'
             })
-        
-
-        
         
 
         
@@ -68,20 +58,14 @@ def file_upload(request):
              })
 
 
-
-
-
         #file check
-
-            
         file_name, mri_image_4C, mri_display, error = load_h5_file(file, 'media')
 
         if error:
             return render(request, 'home.html', {'error': error})
         
 
-
-        #edge case to 
+        #default values 
         llm_output = None
         overlay_path = None
         Unet_success = False
@@ -96,23 +80,19 @@ def file_upload(request):
 
         try:
 
-
             #run unet and get the mask
-
             mask = run_Unet(mri_image_4C)
 
-
         
-            #convert mask to rgbp
-
+            #convert mri to rgb
             mri_color = np.stack([mri_display]  * 3, axis=-1)
 
 
-
-            #adding thhe colors to the mask
-
+            # match mask dimennsions to mri color 
             color_mask = np.zeros_like(mri_color)
 
+
+            #adding colors to the mask
             color_mask[mask == 1] = [255, 0, 0]  #red
 
             color_mask[mask == 2] = [0, 255, 0] # green
@@ -121,20 +101,18 @@ def file_upload(request):
 
 
 
+
             #overlay
             alpha = 0.35
 
             overlay = ((1- alpha) * mri_color + alpha * color_mask).astype(np.uint8)
         
-        
             overlay_mask = Image.fromarray(overlay)
         
-
             overlay_path = os.path.join('media', 'overlay.png')
 
 
             #save overlay as image
-
             overlay_mask.save(overlay_path)
         
 
@@ -151,9 +129,6 @@ def file_upload(request):
 
 
 
-
-
-
         if Unet_success:
 
              try:
@@ -165,13 +140,15 @@ def file_upload(request):
 
 
                 if not llm_output:
-                     llm_output = "Sorry service is currently unavailable"
+                     llm_output = "Sorry explanation service is currently unavailable"
 
 
              except Exception :
-                llm_error = "Sorry but there was an error with the LLM response: "
+                llm_error = "Sorry but explanation cannot be provided due to a segmentation error: "
         
       
+
+      #return all outputs to presentation layer
 
 
         return render(request, 'home.html', {

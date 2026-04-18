@@ -1,8 +1,6 @@
 import tensorflow as tf
 
 
-
-
 #dice loss
 
 def dice_loss(y_true, y_pred, smooth=1e-6):
@@ -10,8 +8,6 @@ def dice_loss(y_true, y_pred, smooth=1e-6):
   #remove background
     y_true = y_true[..., 1:]
     y_pred = y_pred[..., 1:]
-
-
 
     # per batch
 
@@ -24,13 +20,9 @@ def dice_loss(y_true, y_pred, smooth=1e-6):
 
 
 
-
-
 #custom weighted crossentropy
 
 def weighted_cce(y_true, y_pred):
-
-
 
 
     # weights for each label
@@ -42,19 +34,12 @@ def weighted_cce(y_true, y_pred):
     pixle_weights = tf.reduce_sum(y_true * weights, axis=-1)
 
 
-
-
-
-
     return tf.reduce_mean(cce * pixle_weights)
 
 
 
-
 #custom loss
-
 def custom_loss(y_true, y_pred):
-
 
   cce = weighted_cce(y_true, y_pred)
 
