@@ -121,6 +121,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "BrainApp/static",
 ]
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 
 
