@@ -14,7 +14,7 @@ def llm_response(image_path):
 
     #since keys in the venv it wont run outside it
     if not os.getenv("OPENAI_API_KEY"):
-        return "Sakib: Sorry but the API key is on my local pc virtual environment so it wont work here"
+        return "Sakib: Sorry but the API key is not found, please find the key attached in cw submission and install it to your environment."
 
     try:
         #convert image to json to give to llm
