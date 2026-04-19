@@ -9,7 +9,7 @@ import base64
 client = OpenAI()
 
 
-def llm_response(image_path):
+def llm_response(overlay_path, mri_path):
 
 
     #since keys in the venv it wont run outside it
@@ -17,8 +17,14 @@ def llm_response(image_path):
         return "Sakib: Sorry but the API key is not found, please find the key attached in cw submission and install it to your environment."
 
     try:
-        #convert image to json to give to llm
-        with open(image_path,"rb")as f:
+        #convert mri image to json to give to llm
+        with open(mri_path,"rb")as f:
+
+            mri_base64 = base64.b64encode(f.read()).decode("utf-8")
+
+
+        #convert overlay image to json to give to llm
+        with open(overlay_path,"rb")as f:
 
             image_base64 = base64.b64encode(f.read()).decode("utf-8")
 
@@ -32,7 +38,16 @@ def llm_response(image_path):
         "content": [
             {"type": "input_text",
              
-              "text": """This is a output of abrain MRI with a segmentation overlay.
+              "text": """
+                You are given two images:
+                1. The first image is the original MRI scan (grayscale).
+                2. The second image is a segmentation overlay showing tumor regions.
+
+                Use both images together:
+                - Use the overlay (second image) to locate tumor regions
+                - Use the MRI (first image) to describe how those regions look visually
+
+                Do NOT rely only on colors. Always describe brightness, texture, shape, and structure in the MRI image.
 
                 Colors (if present):
                 - red = necrotic core
@@ -40,19 +55,92 @@ def llm_response(image_path):
                 - blue = active tumor
 
                 IMPORTANT:
-                Carefully check if any red, green, or blue colored regions are actually visible.
+                Carefully check whether any red, green, or blue colored regions are visible.
 
                 If NO colored regions are present:
                 - Say clearly: "No tumor regions are visible in this scan."
-                - Do not describe tumor types.
+                - Do not describe tumor types
+                - Do not attempt visual guidance for tumor detection
 
                 If colored regions ARE present:
                 Explain the scan in simple terms.
 
                 Structure:
-                1. What is visible
-                2. What each colored region means (only if present)
-                3. What this means for the patient
+
+                1. What is visible  
+                    Describe ONLY what is clearly visible in the MRI image.
+
+                    - Focus on brightness, shapes, and any visible regions
+                    - Mention if the image is mostly dark, unclear, or only partially visible
+                    - Describe any noticeable differences in brightness or texture
+
+                    Do NOT:
+                    - Assume full brain structure is visible
+                    - Describe symmetry or normal anatomy unless clearly seen
+                    - Use generic descriptions of how a brain "normally" looks
+
+                    If the image lacks clear detail, explicitly say that instead of guessing.
+
+                2. What each colored region means (only if present)  
+                Explain each visible color clearly and simply.
+
+                3. Guided visual identification using the MRI image (MOST IMPORTANT)
+
+                    This section MUST be written as a clear numbered step-by-step guide.
+
+                    Use numbered steps (Step 1, Step 2, Step 3, etc.).
+                    Do NOT use bullet points in this section.
+
+                    IMPORTANT: Base your explanation strictly on what is visually observable in THIS MRI image.
+
+                    - Do NOT rely on general textbook descriptions unless they clearly match what is visible.
+                    - Only describe features that you can actually see in the MRI.
+                    - If a feature (e.g., necrotic core, edema, active tumor) is not clearly distinguishable, say that it is not clearly visible.
+                    - Do not assume brightness patterns (e.g., "dark center" or "bright region") unless they are clearly present.
+                    - Always prioritise direct visual evidence over typical medical expectations.
+
+                    Visual order rule:
+                    Always guide the user from the most visually obvious feature to the least obvious:
+
+                    1. Start with the largest or most noticeable abnormal region
+                    2. Then move inward to more specific regions
+                    3. Then describe smaller internal variations
+
+                    Guide the user as if they are actively looking at the MRI:
+
+                    Step 1: Tell the user where to look first (e.g., center, edges, left or right side), focusing on the most noticeable abnormal region.
+
+                    Step 2: Describe what they should notice in that area using visual features such as brightness, texture, and shape.
+                    Use cautious language such as "you may notice" or "this area appears".
+
+                    Step 3: Ask the user to compare this region with normal brain tissue, which appears smoother and more uniform.
+
+                    Step 4: Explain what this visible difference may correspond to (e.g., edema, active tumor, necrotic core), only if it clearly matches the image.
+
+                    Continue with additional numbered steps, moving from larger regions to smaller internal details.
+
+                    For each tumor-related region (if clearly visible), include:
+                    - WHERE it is located (center, inside, surrounding, outer area)
+                    - HOW it looks in the MRI (brightness, texture, shape)
+                    - HOW the user can recognise it visually
+
+                    Always describe visual differences:
+                    brighter vs darker
+                    smooth vs irregular
+                    well-defined vs diffuse (spread-out)
+
+                    Make the explanation feel like instructions the user can follow with their eyes.
+
+                    The goal is to help the user think:
+                    "Oh, I can see it now."
+
+                    Avoid generic statements like:
+                    "There is a tumor present"
+
+                    Always guide observation step-by-step.
+
+                4. What this means for the patient  
+                Explain in simple, non-diagnostic terms. Avoid making definitive clinical claims.
 
                 Rules:
                 - Do not assume tumors exist
@@ -65,14 +153,21 @@ def llm_response(image_path):
                 - Always remind the user that the output can be incorrect
                 - provide these links for further reading:https://www.cancer.gov/types/brain    and  https://www.nhs.uk/conditions/brain-tumours/   and https://www.who.int/news-room/fact-sheets/detail/cancer
                 -Format all links as clickable HTML links using <a href="URL" target="_blank">text</a>.
-                -Do NOT outpt plain URLs.
+                
                 """
                 },
             {
                 "type": "input_image",
 
+                "image_url": f"data:image/png;base64,{mri_base64}"
+            },
+
+             {
+                "type": "input_image",
+
                 "image_url": f"data:image/png;base64,{image_base64}"
             },
+
         ],
     }],
 

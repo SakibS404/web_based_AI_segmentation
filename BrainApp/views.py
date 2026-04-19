@@ -133,9 +133,15 @@ def file_upload(request):
 
              try:
         
+
+                #creating mri path to pass to llm
+
+                mri_path = os.path.join('media', file_name)
+
+
                  #LLM RESPONSE 
 
-                llm_output = llm_response(overlay_path)
+                llm_output = llm_response(overlay_path, mri_path)
 
 
 
