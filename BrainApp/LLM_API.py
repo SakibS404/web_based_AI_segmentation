@@ -15,6 +15,8 @@ def llm_response(overlay_path, mri_path):
     #since keys in the venv it wont run outside it
     if not os.getenv("OPENAI_API_KEY"):
         return "Sakib: Sorry but the API key is not found, please find the key attached in cw submission and install it to your environment."
+    
+    client = OpenAI()
 
     try:
         #convert mri image to json to give to llm

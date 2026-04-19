@@ -2,9 +2,10 @@ import h5py
 import numpy as np
 from PIL import Image
 import os
+from django.conf import settings
 
 
-def load_h5_file(file, media_root):
+def load_h5_file(file):
 
 
     
@@ -44,7 +45,7 @@ def load_h5_file(file, media_root):
 
 
     #saving the image to media folder
-        output_path = os.path.join(media_root, 'uploaded_image.png')
+        output_path = os.path.join(settings.MEDIA_ROOT, 'uploaded_image.png')
         img.save(output_path)
 
         return "uploaded_image.png", mri_image_4C,mri_image, None

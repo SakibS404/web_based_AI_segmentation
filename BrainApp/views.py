@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
+
 from .h5_loading import load_h5_file
 from .LLM_API import llm_response
 from .U_NET import run_Unet
@@ -21,6 +21,8 @@ def home(request):
 
 def file_upload(request):
     if request.method == 'POST':
+
+        os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
 
         file = request.FILES.get('file')
 
@@ -59,7 +61,7 @@ def file_upload(request):
 
 
         #file check
-        file_name, mri_image_4C, mri_display, error = load_h5_file(file, 'media')
+        file_name, mri_image_4C, mri_display, error = load_h5_file(file)
 
         if error:
             return render(request, 'home.html', {'error': error})
@@ -109,7 +111,7 @@ def file_upload(request):
         
             overlay_mask = Image.fromarray(overlay)
         
-            overlay_path = os.path.join('media', 'overlay.png')
+            overlay_path = os.path.join(settings.MEDIA_ROOT, 'overlay.png')
 
 
             #save overlay as image
@@ -136,7 +138,7 @@ def file_upload(request):
 
                 #creating mri path to pass to llm
 
-                mri_path = os.path.join('media', file_name)
+                mri_path = os.path.join(settings.MEDIA_ROOT, file_name)
 
 
                  #LLM RESPONSE 
@@ -159,7 +161,7 @@ def file_upload(request):
 
         return render(request, 'home.html', {
             'image_url': f'/media/{file_name}' ,
-            'overlay_url': f'/{overlay_path}' if overlay_path else None,
+            'overlay_url': '/media/overlay.png' if overlay_path else None,
               'llm_output': llm_output,
             'unet_error': unet_error,
             'llm_error': llm_error
