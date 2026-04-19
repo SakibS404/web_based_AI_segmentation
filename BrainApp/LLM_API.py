@@ -6,10 +6,10 @@ import base64
 
 
 
-client = OpenAI()
 
 
-def llm_response(overlay_path, mri_path):
+
+def llm_response(overlay_path, mri_path, unique_classes):
 
 
     #since keys in the venv it wont run outside it
@@ -30,7 +30,13 @@ def llm_response(overlay_path, mri_path):
 
             image_base64 = base64.b64encode(f.read()).decode("utf-8")
 
+        
 
+        
+        
+        
+
+        #create the prompt for llm
 
         response = client.responses.create(
 
@@ -40,7 +46,22 @@ def llm_response(overlay_path, mri_path):
         "content": [
             {"type": "input_text",
              
-              "text": """
+              "text": f"""
+
+              Detected classes from segmentation model: {unique_classes}
+
+              IMPORTANT (STRICT RULES):
+                - Class 1 = red (necrotic core)
+                - Class 2 = green (edema)
+                - Class 3 = blue (active tumor)
+
+                - Only the classes present in {unique_classes} are actually present in the scan.
+                - If a class is NOT in {unique_classes}, you MUST say it is NOT present.
+                - If a class IS in {unique_classes}, you MUST say it IS present.
+                - Do NOT override this using visual judgement.
+                - The overlay image may be misleading due to blending — trust the class list first.
+
+
                 You are given two images:
                 1. The first image is the original MRI scan (grayscale).
                 2. The second image is a segmentation overlay showing tumor regions.
@@ -57,14 +78,20 @@ def llm_response(overlay_path, mri_path):
                 - blue = active tumor
 
                 IMPORTANT:
-                Carefully check whether any red, green, or blue colored regions are visible.
+                - The presence of tumor regions MUST be determined ONLY from the detected classes: {unique_classes}.
+                - Do NOT decide tumor presence based on visual inspection of colors.
 
-                If NO colored regions are present:
+                If none of the classes 1, 2, or 3 are in {unique_classes}:
                 - Say clearly: "No tumor regions are visible in this scan."
-                - Do not describe tumor types
-                - Do not attempt visual guidance for tumor detection
+                - Do NOT describe tumor types.
+                - Do NOT provide guided visual identification for tumors.
 
-                If colored regions ARE present:
+            
+
+                If any of the classes 1, 2, or 3 are in {unique_classes}:
+                - Tumor regions ARE present.
+                - You MUST explicitly state which regions are present based on the classes.
+
                 Explain the scan in simple terms.
 
                 Structure:

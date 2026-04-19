@@ -92,7 +92,13 @@ def file_upload(request):
 
             # match mask dimennsions to mri color 
             color_mask = np.zeros_like(mri_color)
+            
 
+            #identify the tumor classes detected
+            unique_classes = np.unique(mask)
+
+            #turn the classes into a list to give to llm
+            unique_classes = list(unique_classes)
 
             #adding colors to the mask
             color_mask[mask == 1] = [255, 0, 0]  #red
@@ -143,7 +149,7 @@ def file_upload(request):
 
                  #LLM RESPONSE 
 
-                llm_output = llm_response(overlay_path, mri_path)
+                llm_output = llm_response(overlay_path, mri_path, unique_classes)
 
 
 
