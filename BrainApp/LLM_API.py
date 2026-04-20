@@ -171,15 +171,17 @@ def llm_response(overlay_path, mri_path, unique_classes):
                 4. What this means for the patient  
                 Explain in simple, non-diagnostic terms. Avoid making definitive clinical claims.
 
+                5. - Always remind the user to consult a doctor for medical advice
+                   - Always remind the user that this is an AI interpretation and not a medical diagnosis
+                   - Always remind the user that the output can be incorrect
+
                 Rules:
                 - Do not assume tumors exist
                 - Only describe colors that are clearly visible
                 - If unsure, say no tumor is visible
                 - Keep it concise and clear for a non-medical audience
                 - Use medically accurate information consistent with trusted sources like PubMed and the WHO classification.
-                - Always remind the user to consult a doctor for medical advice
-                - Always remind the user that this is an AI interpretation and not a medical diagnosis
-                - Always remind the user that the output can be incorrect
+                
                 - provide these links for further reading:https://www.cancer.gov/types/brain    and  https://www.nhs.uk/conditions/brain-tumours/   and https://www.who.int/news-room/fact-sheets/detail/cancer
                 -Format all links as clickable HTML links using <a href="URL" target="_blank">text</a>.
                 
